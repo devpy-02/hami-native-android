@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/* حالت شب فقط با کلاس .dark (دکمه‌ی تنظیمات) کنترل شود، نه با تنظیم شب خود گوشی */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* رنگ‌های میانی که در برنامه استفاده شده ولی در Tailwind نسخه ۴ پیش‌فرض وجود ندارند */
+@theme {
+  --color-slate-750: #263449;
+  --color-slate-850: #162033;
+}
+
+html {
+  border-color: #000000;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+}
+
+/* چاپ فاکتور: فقط کپی فاکتور (#invoice-print-root) چاپ می‌شود */
+#invoice-print-root {
+  display: none;
+}
+
+@media print {
+  body.print-invoice-mode > *:not(#invoice-print-root) {
+    display: none !important;
+  }
+  body.print-invoice-mode {
+    background: #ffffff !important;
+  }
+  body.print-invoice-mode #invoice-print-root {
+    display: block !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* عرض کامل صفحه، و جلوگیری از شکستن ردیف‌های جدول بین دو صفحه */
+  body.print-invoice-mode #invoice-print-root .max-w-2xl {
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  body.print-invoice-mode #invoice-print-root tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  body.print-invoice-mode #invoice-print-root thead {
+    display: table-header-group;
+  }
+  body.print-invoice-mode #invoice-print-root > div {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+  }
+}
